@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "total": {
+      "type": "decimal"
+    },
+    "items": {
+      "type": "json"
+    },
+    "state": {
+      "type": "enumeration",
+      "default": "pending",
+      "enum": [
+        "pending",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
