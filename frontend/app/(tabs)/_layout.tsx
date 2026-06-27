@@ -2,6 +2,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
+import { theme } from '../../src/styles/theme';
 
 export default function TabLayout() {
   return (
@@ -12,28 +13,28 @@ export default function TabLayout() {
 
         // 2. Estilizado uniforme para la cabecera superior en toda la app
         headerStyle: {
-          backgroundColor: '#ffffff',
+          backgroundColor: theme.colors.card,
           borderBottomWidth: 1,
-          borderBottomColor: '#e9ecef',
+          borderBottomColor: theme.colors.border,
           elevation: 2, // Sombra suave en Android
-          shadowColor: '#000', // Sombra suave en iOS
+          shadowColor: '#0f172a', // Sombra suave en iOS
           shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.05,
+          shadowOpacity: 0.04,
           shadowRadius: 2,
         },
         // Estilo del texto del título superior
         headerTitleStyle: {
           fontSize: 18,
           fontWeight: '800',
-          color: '#1a1a1a',
+          color: theme.colors.text,
           letterSpacing: 0.5,
         },
         headerTitleAlign: 'center', // Centra el título estéticamente en Android e iOS
 
         // Color del ícono y texto cuando la pestaña está seleccionada
-        tabBarActiveTintColor: '#007bff',
+        tabBarActiveTintColor: theme.colors.primary,
         // Color del ícono y texto cuando la pestaña está inactiva
-        tabBarInactiveTintColor: '#6c757d',
+        tabBarInactiveTintColor: theme.colors.textSecondary,
         // Estilos para la barra de pestañas en general
         tabBarStyle: styles.tabBar,
         // Estilos para las etiquetas de texto abajo del ícono
@@ -81,21 +82,21 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.colors.card,
     borderTopWidth: 1,
-    borderTopColor: '#e9ecef',
+    borderTopColor: theme.colors.border,
     height: 60,
     paddingBottom: 8,
     paddingTop: 8,
     elevation: 8, // Sombra en Android
-    shadowColor: '#000', // Sombra en iOS
+    shadowColor: '#0f172a', // Sombra en iOS
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.05,
     shadowRadius: 3,
   },
   tabBarLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   icon: {
     fontSize: 20,

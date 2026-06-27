@@ -1,5 +1,5 @@
 // app/(tabs)/profile.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -18,6 +18,7 @@ import { useFavorites } from '../../src/context/FavouritesContext';
 import { STRAPI_URL } from '../../src/api/config';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { strapiApi } from '../../src/api/strapi';
+import { theme } from '../../src/styles/theme';
 
 export default function ProfileScreen() {
     const { user, login, register, logout, loading } = useAuth();
@@ -107,7 +108,7 @@ export default function ProfileScreen() {
     if (loading) {
         return (
             <View style={styles.centerContainer}>
-                <ActivityIndicator size="large" color="#007AFF" />
+                <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
         );
     }
@@ -140,7 +141,7 @@ export default function ProfileScreen() {
                         <Text style={styles.sectionHeader}>📦 Mis Órdenes</Text>
 
                         {loadingOrders && !refreshing ? (
-                            <ActivityIndicator size="small" color="#007AFF" style={styles.orderLoader} />
+                            <ActivityIndicator size="small" color={theme.colors.primary} style={styles.orderLoader} />
                         ) : !orders || orders.length === 0 ? (
                             <View style={styles.emptyOrdersBox}>
                                 <Text style={styles.emptyOrdersText}>Aún no tienes órdenes de compra.</Text>
@@ -193,7 +194,7 @@ export default function ProfileScreen() {
                         <Text style={styles.sectionHeader}>❤️ Mis Favoritos</Text>
 
                         {loadingFavs ? (
-                            <ActivityIndicator size="small" color="#007AFF" style={styles.favLoader} />
+                            <ActivityIndicator size="small" color={theme.colors.primary} style={styles.favLoader} />
                         ) : !favRelations || favRelations.length === 0 ? (
                             <View style={styles.emptyFavsBox}>
                                 <Text style={styles.emptyFavsText}>Aún no tienes productos favoritos.</Text>
@@ -227,7 +228,9 @@ export default function ProfileScreen() {
                                             });
                                         }}
                                     >
-                                        <Image source={{ uri: imageUrl }} style={styles.favImage} resizeMode="contain" />
+                                        <View style={styles.favImageContainer}>
+                                            <Image source={{ uri: imageUrl }} style={styles.favImage} resizeMode="contain" />
+                                        </View>
 
                                         <View style={styles.favInfo}>
                                             {product.brand && (
@@ -270,79 +273,85 @@ export default function ProfileScreen() {
     // --- VISTA 2: FORMULARIO DINÁMICO (LOGIN / REGISTRO) ---
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.loginForm}>
-                <Text style={styles.title}>
-                    {mode === 'login' ? 'Ingresar a tu Cuenta' : 'Crear una Cuenta'}
-                </Text>
-                <Text style={styles.subtitle}>
-                    {mode === 'login'
-                        ? 'Iniciá sesión para gestionar tus compras y favoritos.'
-                        : 'Completá tus datos para empezar a comprar.'}
-                </Text>
+            <ScrollView contentContainerStyle={styles.centerContainerScroll}>
+                <View style={styles.loginForm}>
+                    <Text style={styles.title}>
+                        {mode === 'login' ? 'Ingresar a tu Cuenta' : 'Crear una Cuenta'}
+                    </Text>
+                    <Text style={styles.subtitle}>
+                        {mode === 'login'
+                            ? 'Iniciá sesión para gestionar tus compras y favoritos.'
+                            : 'Completá tus datos para empezar a comprar.'}
+                    </Text>
 
-                {/* Campo exclusivo para Registro */}
-                {mode === 'register' && (
-                    <>
-                        <Text style={styles.label}>Nombre de Usuario</Text>
+                    {/* Campo exclusivo para Registro */}
+                    {mode === 'register' && (
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Nombre de Usuario</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Ej: juan_perez"
+                                placeholderTextColor={theme.colors.textMuted}
+                                value={username}
+                                onChangeText={setUsername}
+                                autoCapitalize="none"
+                            />
+                        </View>
+                    )}
+
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Correo Electrónico</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Ej: juan_perez"
-                            placeholderTextColor="#999"
-                            value={username}
-                            onChangeText={setUsername}
+                            placeholder="ejemplo@correo.com"
+                            placeholderTextColor={theme.colors.textMuted}
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
                             autoCapitalize="none"
                         />
-                    </>
-                )}
+                    </View>
 
-                <Text style={styles.label}>Correo Electrónico</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="ejemplo@correo.com"
-                    placeholderTextColor="#999"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.label}>Contraseña</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="••••••••"
+                            placeholderTextColor={theme.colors.textMuted}
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            autoCapitalize="none"
+                        />
+                    </View>
 
-                <Text style={styles.label}>Contraseña</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="••••••••"
-                    placeholderTextColor="#999"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    autoCapitalize="none"
-                />
+                    <TouchableOpacity
+                        style={[styles.loginBtn, isSubmitting && styles.loginBtnDisabled]}
+                        onPress={handleSubmit}
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? (
+                            <ActivityIndicator color={theme.colors.white} />
+                        ) : (
+                            <Text style={styles.loginBtnText}>
+                                {mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}
+                            </Text>
+                        )}
+                    </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={[styles.loginBtn, isSubmitting && styles.loginBtnDisabled]}
-                    onPress={handleSubmit}
-                    disabled={isSubmitting}
-                >
-                    {isSubmitting ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <Text style={styles.loginBtnText}>
-                            {mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}
+                    {/* Enlace para conmutar entre pantallas */}
+                    <TouchableOpacity
+                        style={styles.switchModeContainer}
+                        onPress={() => setMode(mode === 'login' ? 'register' : 'login')}
+                    >
+                        <Text style={styles.switchModeText}>
+                            {mode === 'login'
+                                ? '¿No tenés cuenta? Creá una acá'
+                                : '¿Ya tenés una cuenta? Iniciá sesión'}
                         </Text>
-                    )}
-                </TouchableOpacity>
-
-                {/* Enlace para conmutar entre pantallas */}
-                <TouchableOpacity
-                    style={styles.switchModeContainer}
-                    onPress={() => setMode(mode === 'login' ? 'register' : 'login')}
-                >
-                    <Text style={styles.switchModeText}>
-                        {mode === 'login'
-                            ? '¿No tenés cuenta? Creá una acá'
-                            : '¿Ya tenés una cuenta? Iniciá sesión'}
-                    </Text>
-                </TouchableOpacity>
-            </View>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -365,214 +374,224 @@ const formatDate = (dateString: string) => {
 const getStatusBadge = (state: string) => {
     switch (state) {
         case 'completed':
-            return { label: 'Completado', bg: '#e8f5e9', color: '#2e7d32' };
+            return { label: 'Completado', bg: theme.colors.successLight, color: theme.colors.successDark };
         case 'pending':
-            return { label: 'Pendiente', bg: '#fff8e1', color: '#f57f17' };
+            return { label: 'Pendiente', bg: theme.colors.warningLight, color: theme.colors.warningDark };
         case 'cancelled':
-            return { label: 'Cancelado', bg: '#ffebee', color: '#c62828' };
+            return { label: 'Cancelado', bg: theme.colors.dangerLight, color: theme.colors.dangerDark };
         default:
-            return { label: state, bg: '#f1f3f5', color: '#495057' };
+            return { label: state, bg: theme.colors.background, color: theme.colors.textSecondary };
     }
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: theme.colors.background,
     },
     centerContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: theme.colors.background,
+    },
+    centerContainerScroll: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        paddingVertical: theme.spacing.xl,
     },
     loginForm: {
-        padding: 25,
-        backgroundColor: '#ffffff',
-        margin: 20,
-        borderRadius: 12,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
+        padding: theme.spacing.xl,
+        backgroundColor: theme.colors.card,
+        marginHorizontal: theme.spacing.lg,
+        borderRadius: theme.borderRadius.lg,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        ...theme.shadows.md,
     },
     title: {
         fontSize: 22,
         fontWeight: '800',
-        color: '#212529',
+        color: theme.colors.text,
         marginBottom: 6,
     },
     subtitle: {
         fontSize: 14,
-        color: '#6c757d',
-        marginBottom: 25,
+        color: theme.colors.textSecondary,
+        marginBottom: theme.spacing.xl,
         lineHeight: 20,
     },
+    inputGroup: {
+        marginBottom: theme.spacing.md,
+    },
     label: {
-        fontSize: 13,
-        fontWeight: '700',
-        color: '#495057',
-        marginBottom: 6,
+        fontSize: 11,
+        fontWeight: '800',
+        color: theme.colors.textSecondary,
+        marginBottom: theme.spacing.xs,
         textTransform: 'uppercase',
+        letterSpacing: 0.5,
     },
     input: {
         height: 46,
-        backgroundColor: '#f1f3f5',
-        borderRadius: 8,
-        paddingHorizontal: 12,
+        backgroundColor: theme.colors.background,
+        borderRadius: theme.borderRadius.md,
+        paddingHorizontal: theme.spacing.md,
         fontSize: 15,
-        color: '#212529',
+        color: theme.colors.text,
         borderWidth: 1,
-        borderColor: '#e9ecef',
-        marginBottom: 18,
+        borderColor: theme.colors.border,
     },
     loginBtn: {
-        backgroundColor: '#007AFF',
+        backgroundColor: theme.colors.primary,
         height: 48,
-        borderRadius: 8,
+        borderRadius: theme.borderRadius.md,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: theme.spacing.sm,
+        ...theme.shadows.sm,
     },
     loginBtnDisabled: {
-        backgroundColor: '#b3d7ff',
+        backgroundColor: theme.colors.primaryLight,
     },
     loginBtnText: {
-        color: '#ffffff',
+        color: theme.colors.white,
         fontSize: 16,
         fontWeight: '700',
     },
     switchModeContainer: {
-        marginTop: 20,
+        marginTop: theme.spacing.lg,
         alignItems: 'center',
     },
     switchModeText: {
-        color: '#007AFF',
+        color: theme.colors.primary,
         fontSize: 14,
         fontWeight: '600',
     },
     /* ESTILOS PERFIL ACTIVO */
     profileBox: {
-        backgroundColor: '#ffffff',
-        margin: 20,
-        padding: 30,
-        borderRadius: 12,
+        backgroundColor: theme.colors.card,
+        margin: theme.spacing.lg,
+        padding: theme.spacing.xl,
+        borderRadius: theme.borderRadius.lg,
         alignItems: 'center',
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowOffset: { width: 0, height: 2 },
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        ...theme.shadows.md,
     },
     avatar: {
-        fontSize: 60,
-        marginBottom: 15,
+        fontSize: 50,
+        marginBottom: theme.spacing.sm,
     },
     welcomeText: {
-        fontSize: 14,
-        color: '#6c757d',
+        fontSize: 13,
+        color: theme.colors.textSecondary,
         fontWeight: '500',
     },
     usernameText: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: '800',
-        color: '#212529',
+        color: theme.colors.text,
         marginTop: 4,
     },
     emailText: {
         fontSize: 14,
-        color: '#495057',
+        color: theme.colors.textSecondary,
         marginTop: 2,
     },
     divider: {
         height: 1,
-        backgroundColor: '#e9ecef',
+        backgroundColor: theme.colors.border,
         width: '100%',
-        marginVertical: 25,
+        marginVertical: theme.spacing.lg,
     },
     logoutBtn: {
-        borderColor: '#dc3545',
+        borderColor: theme.colors.danger,
         borderWidth: 1.5,
         width: '100%',
         height: 46,
-        borderRadius: 8,
+        borderRadius: theme.borderRadius.md,
         justifyContent: 'center',
         alignItems: 'center',
     },
     logoutBtnText: {
-        color: '#dc3545',
+        color: theme.colors.danger,
         fontSize: 15,
         fontWeight: '700',
     },
     scrollContent: {
-        paddingBottom: 30,
+        paddingBottom: theme.spacing.xxl,
     },
     favoritesSection: {
-        marginHorizontal: 20,
-        marginBottom: 20,
+        marginHorizontal: theme.spacing.lg,
+        marginBottom: theme.spacing.lg,
     },
     sectionHeader: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '800',
-        color: '#212529',
-        marginBottom: 12,
+        color: theme.colors.text,
+        marginBottom: theme.spacing.md,
+        letterSpacing: 0.2,
     },
     favLoader: {
-        marginVertical: 20,
+        marginVertical: theme.spacing.lg,
     },
     emptyFavsBox: {
-        backgroundColor: '#ffffff',
-        borderRadius: 12,
-        padding: 20,
+        backgroundColor: theme.colors.card,
+        borderRadius: theme.borderRadius.lg,
+        padding: theme.spacing.xl,
         alignItems: 'center',
         borderStyle: 'dashed',
         borderWidth: 1,
-        borderColor: '#dee2e6',
+        borderColor: theme.colors.border,
     },
     emptyFavsText: {
         fontSize: 14,
-        fontWeight: '600',
-        color: '#6c757d',
+        fontWeight: '700',
+        color: theme.colors.textSecondary,
     },
     emptyFavsSubtext: {
         fontSize: 12,
-        color: '#adb5bd',
+        color: theme.colors.textMuted,
         textAlign: 'center',
         marginTop: 4,
     },
     favCard: {
-        backgroundColor: '#ffffff',
-        borderRadius: 12,
-        padding: 10,
+        backgroundColor: theme.colors.card,
+        borderRadius: theme.borderRadius.lg,
+        padding: theme.spacing.sm,
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOpacity: 0.03,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
+        marginBottom: theme.spacing.sm,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        ...theme.shadows.sm,
+    },
+    favImageContainer: {
+        backgroundColor: '#fafafa',
+        padding: theme.spacing.xs,
+        borderRadius: theme.borderRadius.md,
     },
     favImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 6,
+        width: 50,
+        height: 50,
+        borderRadius: theme.borderRadius.sm,
     },
     favInfo: {
         flex: 1,
-        marginLeft: 12,
+        marginLeft: theme.spacing.md,
         justifyContent: 'center',
     },
     favBrand: {
-        fontSize: 10,
-        color: '#888',
-        fontWeight: 'bold',
+        fontSize: 9,
+        color: theme.colors.textMuted,
+        fontWeight: '800',
         textTransform: 'uppercase',
     },
     favTitle: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#333',
+        color: theme.colors.text,
         marginTop: 2,
     },
     favPriceRow: {
@@ -583,101 +602,99 @@ const styles = StyleSheet.create({
     favPrice: {
         fontSize: 13,
         fontWeight: '700',
-        color: '#212529',
+        color: theme.colors.text,
     },
     favDiscountPrice: {
         fontSize: 13,
         fontWeight: '700',
-        color: '#e74c3c',
+        color: theme.colors.danger,
         marginRight: 6,
     },
     favOriginalPrice: {
         fontSize: 11,
-        color: '#999',
+        color: theme.colors.textMuted,
         textDecorationLine: 'line-through',
     },
     deleteFavBtn: {
-        padding: 10,
+        padding: theme.spacing.sm,
         justifyContent: 'center',
         alignItems: 'center',
     },
     deleteFavText: {
-        fontSize: 20,
+        fontSize: 18,
     },
     /* ESTILOS PARA ÓRDENES */
     ordersSection: {
-        marginHorizontal: 20,
-        marginBottom: 20,
+        marginHorizontal: theme.spacing.lg,
+        marginBottom: theme.spacing.lg,
     },
     orderLoader: {
-        marginVertical: 20,
+        marginVertical: theme.spacing.lg,
     },
     emptyOrdersBox: {
-        backgroundColor: '#ffffff',
-        borderRadius: 12,
-        padding: 20,
+        backgroundColor: theme.colors.card,
+        borderRadius: theme.borderRadius.lg,
+        padding: theme.spacing.xl,
         alignItems: 'center',
         borderStyle: 'dashed',
         borderWidth: 1,
-        borderColor: '#dee2e6',
+        borderColor: theme.colors.border,
     },
     emptyOrdersText: {
         fontSize: 14,
-        fontWeight: '600',
-        color: '#6c757d',
+        fontWeight: '700',
+        color: theme.colors.textSecondary,
     },
     emptyOrdersSubtext: {
         fontSize: 12,
-        color: '#adb5bd',
+        color: theme.colors.textMuted,
         textAlign: 'center',
         marginTop: 4,
     },
     orderCard: {
-        backgroundColor: '#ffffff',
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 12,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOpacity: 0.03,
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
+        backgroundColor: theme.colors.card,
+        borderRadius: theme.borderRadius.lg,
+        padding: theme.spacing.lg,
+        marginBottom: theme.spacing.sm,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        ...theme.shadows.sm,
     },
     orderHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         borderBottomWidth: 1,
-        borderColor: '#f1f3f5',
-        paddingBottom: 8,
-        marginBottom: 8,
+        borderColor: theme.colors.border,
+        paddingBottom: theme.spacing.sm,
+        marginBottom: theme.spacing.sm,
     },
     orderIdText: {
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: '700',
-        color: '#212529',
+        color: theme.colors.text,
     },
     orderDateText: {
         fontSize: 11,
-        color: '#868e96',
+        color: theme.colors.textMuted,
         marginTop: 2,
     },
     statusBadge: {
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 6,
+        paddingHorizontal: theme.spacing.sm,
+        paddingVertical: 3,
+        borderRadius: theme.borderRadius.sm,
     },
     statusBadgeText: {
-        fontSize: 11,
-        fontWeight: '700',
+        fontSize: 9,
+        fontWeight: '800',
         textTransform: 'uppercase',
     },
     orderItemsList: {
-        marginBottom: 10,
+        marginBottom: theme.spacing.md,
     },
     orderItemText: {
         fontSize: 13,
-        color: '#495057',
+        color: theme.colors.textSecondary,
         lineHeight: 18,
     },
     orderFooter: {
@@ -685,17 +702,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderTopWidth: 1,
-        borderColor: '#f1f3f5',
-        paddingTop: 8,
+        borderColor: theme.colors.border,
+        paddingTop: theme.spacing.sm,
     },
     orderTotalLabel: {
         fontSize: 13,
         fontWeight: '600',
-        color: '#6c757d',
+        color: theme.colors.textSecondary,
     },
     orderTotalValue: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: '800',
-        color: '#007AFF',
+        color: theme.colors.primary,
     },
 });

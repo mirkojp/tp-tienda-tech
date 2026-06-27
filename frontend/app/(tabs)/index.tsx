@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { ProductCard } from '../../src/components/ProductCard'; 
+import { theme } from '../../src/styles/theme';
 
 const API_URL = 'http://localhost:1337/api';
 
@@ -117,14 +118,14 @@ export default function HomeScreen() {
           <TextInput
             style={styles.searchInput}
             placeholder="Buscar productos..."
-            placeholderTextColor="#999"
+            placeholderTextColor={theme.colors.textMuted}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
 
         <Text style={styles.filterTitle}>Categorías</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow} contentContainerStyle={styles.chipRowContainer}>
           <TouchableOpacity
             style={[styles.chip, !selectedCategory && styles.chipActive]}
             onPress={() => setSelectedCategory(null)}
@@ -143,7 +144,7 @@ export default function HomeScreen() {
         </ScrollView>
 
         <Text style={styles.filterTitle}>Marcas</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipRow} contentContainerStyle={styles.chipRowContainer}>
           <TouchableOpacity
             style={[styles.chip, !selectedBrand && styles.chipActive]}
             onPress={() => setSelectedBrand(null)}
@@ -182,7 +183,7 @@ export default function HomeScreen() {
 
       {/* BASE DEL LISTADO */}
       {loading ? (
-        <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
+        <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />
       ) : (
         <FlatList
           ref={flatListRef}
@@ -215,7 +216,7 @@ export default function HomeScreen() {
           onPress={() => handlePageChange(page - 1)}
           disabled={page === 1}
         >
-          <Text style={[styles.pageBtnText, page === 1 && styles.pageBtnTextDisabled]}>◀ Anterior</Text>
+          <Text style={[styles.pageBtnText, page === 1 && styles.pageBtnTextDisabled]}>◀ Ant.</Text>
         </TouchableOpacity>
 
         <View style={styles.pageInfoContainer}>
@@ -228,7 +229,7 @@ export default function HomeScreen() {
           onPress={() => handlePageChange(page + 1)}
           disabled={page === totalPages}
         >
-          <Text style={[styles.pageBtnText, page === totalPages && styles.pageBtnTextDisabled]}>Siguiente ▶</Text>
+          <Text style={[styles.pageBtnText, page === totalPages && styles.pageBtnTextDisabled]}>Sig. ▶</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -238,109 +239,110 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: theme.colors.background,
   },
   filterContainer: {
-    backgroundColor: '#fff',
-    paddingVertical: 8,
+    backgroundColor: theme.colors.card,
+    paddingVertical: theme.spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: '#e9ecef',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowOffset: { width: 0, height: 2 },
+    borderBottomColor: theme.colors.border,
+    ...theme.shadows.sm,
   },
   searchSection: {
-    paddingHorizontal: 15,
-    marginBottom: 8,
+    paddingHorizontal: theme.spacing.lg,
+    marginBottom: theme.spacing.xs,
   },
   searchInput: {
-    height: 40,
-    backgroundColor: '#f1f3f5',
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    height: 42,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.md,
+    paddingHorizontal: theme.spacing.md,
     fontSize: 15,
-    color: '#212529',
+    color: theme.colors.text,
     borderWidth: 1,
-    borderColor: '#e9ecef',
+    borderColor: theme.colors.border,
   },
   filterTitle: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#6c757d',
-    marginLeft: 15,
-    marginTop: 4,
+    fontSize: 10,
+    fontWeight: '800',
+    color: theme.colors.textSecondary,
+    marginLeft: theme.spacing.lg,
+    marginTop: theme.spacing.xs,
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   filterTitleInline: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#6c757d',
+    fontSize: 10,
+    fontWeight: '800',
+    color: theme.colors.textSecondary,
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   chipRow: {
-    paddingLeft: 15,
-    marginVertical: 4,
+    marginVertical: theme.spacing.xs,
+  },
+  chipRowContainer: {
+    paddingLeft: theme.spacing.lg,
+    paddingRight: theme.spacing.md,
   },
   chip: {
-    backgroundColor: '#f1f3f5',
-    paddingHorizontal: 14,
-    paddingVertical: 5,
-    borderRadius: 20,
-    marginRight: 8,
+    backgroundColor: theme.colors.background,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 6,
+    borderRadius: theme.borderRadius.round,
+    marginRight: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: '#e9ecef',
+    borderColor: theme.colors.border,
   },
   chipActive: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   chipText: {
-    color: '#495057',
-    fontSize: 13,
+    color: theme.colors.textSecondary,
+    fontSize: 12,
+    fontWeight: '500',
   },
   chipTextActive: {
-    color: '#fff',
-    fontWeight: '600',
+    color: theme.colors.white,
+    fontWeight: '700',
   },
   orderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    marginTop: 4,
+    paddingHorizontal: theme.spacing.lg,
+    marginTop: theme.spacing.xs,
   },
   orderButtons: {
     flexDirection: 'row',
   },
   orderBtn: {
-    backgroundColor: '#f1f3f5',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 6,
-    marginLeft: 6,
+    backgroundColor: theme.colors.background,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 5,
+    borderRadius: theme.borderRadius.md,
+    marginLeft: theme.spacing.xs,
     borderWidth: 1,
-    borderColor: '#e9ecef',
+    borderColor: theme.colors.border,
   },
   orderBtnActive: {
-    backgroundColor: '#E3F2FD',
-    borderColor: '#2196F3',
+    backgroundColor: theme.colors.primaryLight,
+    borderColor: theme.colors.primary,
   },
   orderBtnText: {
     fontSize: 12,
-    color: '#495057',
+    color: theme.colors.textSecondary,
+    fontWeight: '500',
   },
   orderBtnTextActive: {
-    color: '#2196F3',
+    color: theme.colors.primary,
     fontWeight: '700',
   },
   listContent: {
-    paddingHorizontal: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingVertical: theme.spacing.md,
   },
   cardWrapper: {
-    marginBottom: 12,
     width: '100%',
   },
   loader: {
@@ -350,37 +352,40 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#6c757d',
+    color: theme.colors.textMuted,
     marginTop: 40,
     fontSize: 15,
   },
-  /* ESTILOS DE LA NUEVA BOTONERA */
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    backgroundColor: theme.colors.card,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#e9ecef',
+    borderTopColor: theme.colors.border,
+    ...theme.shadows.sm,
   },
   pageBtn: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 6,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    ...theme.shadows.sm,
   },
   pageBtnDisabled: {
-    backgroundColor: '#e9ecef',
+    backgroundColor: theme.colors.border,
+    elevation: 0,
+    shadowOpacity: 0,
   },
   pageBtnText: {
-    color: '#ffffff',
+    color: theme.colors.white,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   pageBtnTextDisabled: {
-    color: '#adb5bd',
+    color: theme.colors.textMuted,
   },
   pageInfoContainer: {
     alignItems: 'center',
@@ -388,11 +393,11 @@ const styles = StyleSheet.create({
   pageInfoText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#212529',
+    color: theme.colors.text,
   },
   pageSubInfoText: {
     fontSize: 11,
-    color: '#6c757d',
+    color: theme.colors.textSecondary,
     marginTop: 2,
   },
 });

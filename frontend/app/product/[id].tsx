@@ -6,6 +6,7 @@ import { STRAPI_URL } from '../../src/api/config';
 import { Product } from '../../src/types/strapy.types';
 import { useCart } from '../../src/context/CartContext';
 import { useFavorites } from '../../src/context/FavouritesContext';
+import { theme } from '../../src/styles/theme';
 
 export default function ProductDetailScreen() {
     const { id } = useLocalSearchParams();
@@ -51,7 +52,7 @@ export default function ProductDetailScreen() {
     if (loading) {
         return (
             <View style={styles.center}>
-                <ActivityIndicator size="large" color="#007bff" />
+                <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
         );
     }
@@ -220,7 +221,11 @@ export default function ProductDetailScreen() {
                 {/* --- FIN CARRUSEL --- */}
 
                 <View style={styles.infoContainer}>
-                    {product.brand && <Text style={styles.brand}>{(product.brand as any).name || product.brand}</Text>}
+                    {product.brand && (
+                        <Text style={styles.brand}>
+                            {typeof product.brand === 'string' ? product.brand : (product.brand as any).name}
+                        </Text>
+                    )}
                     <Text style={styles.title}>{product.title}</Text>
 
                     <View style={styles.priceRow}>
@@ -234,7 +239,22 @@ export default function ProductDetailScreen() {
                         )}
                     </View>
 
-                    <Text style={styles.stock}>Disponibles: {product.stock} unidades</Text>
+                    {/* Stock disponible con badge */}
+                    <View style={[
+                        styles.stockBadge,
+                        product.stock > 0 ? styles.stockIn : styles.stockOut
+                    ]}>
+                        <View style={[
+                            styles.stockDot,
+                            { backgroundColor: product.stock > 0 ? theme.colors.success : theme.colors.danger }
+                        ]} />
+                        <Text style={[
+                            styles.stockText,
+                            { color: product.stock > 0 ? theme.colors.successDark : theme.colors.dangerDark }
+                        ]}>
+                            {product.stock > 0 ? `Disponible: ${product.stock} unidades` : 'Sin Stock'}
+                        </Text>
+                    </View>
 
                     <View style={styles.divider} />
 
@@ -280,68 +300,84 @@ export default function ProductDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff' },
+    container: {
+        flex: 1,
+        backgroundColor: theme.colors.background,
+    },
     navBar: {
         height: 50,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 16,
+        paddingHorizontal: theme.spacing.lg,
         borderBottomWidth: 1,
-        borderColor: '#eee'
+        borderColor: theme.colors.border,
+        backgroundColor: theme.colors.card,
     },
-    backButton: { paddingVertical: 6 },
-    backButtonText: { color: '#007bff', fontSize: 16, fontWeight: '600' },
-    favoriteButton: { padding: 6, justifyContent: 'center', alignItems: 'center' },
-    favoriteIcon: { fontSize: 22 },
-    scrollContainer: { paddingBottom: 100 },
-
-    // --- NUEVOS ESTILOS OPTIMIZADOS PARA AJUSTE DE IMAGEN ---
+    backButton: {
+        paddingVertical: 6,
+    },
+    backButtonText: {
+        color: theme.colors.primary,
+        fontSize: 16,
+        fontWeight: '700',
+    },
+    favoriteButton: {
+        padding: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    favoriteIcon: {
+        fontSize: 22,
+    },
+    scrollContainer: {
+        paddingBottom: 100,
+    },
     carouselContainer: {
         position: 'relative',
         height: 330,
-        backgroundColor: '#fafafa',
+        backgroundColor: theme.colors.card,
+        borderBottomWidth: 1,
+        borderColor: theme.colors.border,
     },
     imageWrapper: {
         height: 300,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fafafa',
+        backgroundColor: theme.colors.card,
     },
     carouselImage: {
-        width: '90%', // Deja un pequeño aire lateral para que luzca limpio
+        width: '90%',
         height: '100%',
     },
     arrowButton: {
         position: 'absolute',
         top: '40%',
-        width: 42,
-        height: 42,
+        width: 40,
+        height: 40,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        borderRadius: 21,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 4,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        ...theme.shadows.sm,
         zIndex: 10,
     },
     leftArrow: {
-        left: 10,
+        left: theme.spacing.md,
     },
     rightArrow: {
-        right: 10,
+        right: theme.spacing.md,
     },
     arrowText: {
-        fontSize: 32,
+        fontSize: 28,
         fontWeight: '300',
-        color: '#222',
-        marginTop: -6,
+        color: theme.colors.text,
+        marginTop: -3,
     },
     arrowDisabled: {
-        color: '#ddd',
+        color: theme.colors.textMuted,
         opacity: 0.4,
     },
     paginationContainer: {
@@ -360,33 +396,167 @@ const styles = StyleSheet.create({
     },
     paginationDotActive: {
         width: 16,
-        backgroundColor: '#007bff',
+        backgroundColor: theme.colors.primary,
     },
     paginationDotInactive: {
         width: 6,
-        backgroundColor: '#ccc',
+        backgroundColor: theme.colors.border,
     },
-    // --- FIN ESTILOS CARRUSEL ---
-
-    infoContainer: { padding: 20 },
-    brand: { fontSize: 13, color: '#888', textTransform: 'uppercase', fontWeight: 'bold', marginBottom: 4 },
-    title: { fontSize: 22, fontWeight: 'bold', color: '#111', marginBottom: 10 },
-    priceRow: { flexDirection: 'row', alignItems: 'baseline', marginBottom: 6 },
-    price: { fontSize: 24, fontWeight: 'bold', color: '#000' },
-    discountPrice: { fontSize: 24, fontWeight: 'bold', color: '#e74c3c', marginRight: 10 },
-    originalPrice: { fontSize: 16, color: '#999', textDecorationLine: 'line-through' },
-    stock: { fontSize: 14, color: '#28a745', fontWeight: '500', marginTop: 4 },
-    divider: { height: 1, backgroundColor: '#eee', marginVertical: 20 },
-    sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 8 },
-    description: { fontSize: 15, color: '#555', lineHeight: 22 },
-    center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    errorText: { fontSize: 16, color: '#e74c3c', fontWeight: '500' },
-    footer: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, borderTopWidth: 1, borderColor: '#eee', backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, justifyContent: 'space-between' },
-    quantitySelector: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f1f3f5', borderRadius: 8, padding: 4 },
-    qtyButton: { width: 36, height: 36, justifyContent: 'center', alignItems: 'center' },
-    qtyText: { fontSize: 20, fontWeight: 'bold', color: '#495057' },
-    qtyNumber: { marginHorizontal: 15, fontSize: 16, fontWeight: 'bold', color: '#212529' },
-    addButton: { flex: 1, backgroundColor: '#007bff', marginLeft: 20, height: 48, borderRadius: 8, justifyContent: 'center', alignItems: 'center' },
-    disabledButton: { backgroundColor: '#ccc' },
-    addButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
+    infoContainer: {
+        padding: theme.spacing.lg,
+        backgroundColor: theme.colors.card,
+        margin: theme.spacing.lg,
+        borderRadius: theme.borderRadius.lg,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        ...theme.shadows.sm,
+    },
+    brand: {
+        fontSize: 10,
+        color: theme.colors.textMuted,
+        textTransform: 'uppercase',
+        fontWeight: '800',
+        letterSpacing: 0.5,
+        marginBottom: 4,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '800',
+        color: theme.colors.text,
+        marginBottom: theme.spacing.sm,
+    },
+    priceRow: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        marginBottom: theme.spacing.sm,
+    },
+    price: {
+        fontSize: 24,
+        fontWeight: '800',
+        color: theme.colors.text,
+    },
+    discountPrice: {
+        fontSize: 24,
+        fontWeight: '800',
+        color: theme.colors.danger,
+        marginRight: 10,
+    },
+    originalPrice: {
+        fontSize: 16,
+        color: theme.colors.textMuted,
+        textDecorationLine: 'line-through',
+    },
+    stockBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: theme.spacing.md,
+        paddingVertical: 4,
+        borderRadius: theme.borderRadius.round,
+        alignSelf: 'flex-start',
+        marginTop: theme.spacing.xs,
+    },
+    stockIn: {
+        backgroundColor: theme.colors.successLight,
+    },
+    stockOut: {
+        backgroundColor: theme.colors.dangerLight,
+    },
+    stockDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        marginRight: 6,
+    },
+    stockText: {
+        fontSize: 11,
+        fontWeight: '700',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: theme.colors.border,
+        marginVertical: theme.spacing.lg,
+    },
+    sectionTitle: {
+        fontSize: 15,
+        fontWeight: '800',
+        color: theme.colors.text,
+        marginBottom: theme.spacing.sm,
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+    },
+    description: {
+        fontSize: 14,
+        color: theme.colors.textSecondary,
+        lineHeight: 22,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: theme.colors.background,
+    },
+    errorText: {
+        fontSize: 16,
+        color: theme.colors.danger,
+        fontWeight: '600',
+    },
+    footer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 80,
+        borderTopWidth: 1,
+        borderColor: theme.colors.border,
+        backgroundColor: theme.colors.card,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: theme.spacing.lg,
+        justifyContent: 'space-between',
+        ...theme.shadows.lg,
+    },
+    quantitySelector: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: theme.colors.background,
+        borderRadius: theme.borderRadius.md,
+        padding: 4,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+    },
+    qtyButton: {
+        width: 36,
+        height: 36,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    qtyText: {
+        fontSize: 20,
+        fontWeight: '700',
+        color: theme.colors.text,
+    },
+    qtyNumber: {
+        marginHorizontal: theme.spacing.md,
+        fontSize: 16,
+        fontWeight: '700',
+        color: theme.colors.text,
+    },
+    addButton: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+        marginLeft: theme.spacing.lg,
+        height: 48,
+        borderRadius: theme.borderRadius.md,
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...theme.shadows.sm,
+    },
+    disabledButton: {
+        backgroundColor: theme.colors.border,
+    },
+    addButtonText: {
+        color: theme.colors.white,
+        fontSize: 16,
+        fontWeight: '700',
+    },
 });
