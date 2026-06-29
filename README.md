@@ -1,4 +1,4 @@
-# 📱 TP Tienda Tech
+#  TP Tienda Tech
 
 Este es un proyecto Full-Stack de comercio electrónico para una tienda de tecnología ("Tienda Tech"). Cuenta con un **Frontend** desarrollado en **React Native / Expo** con navegación basada en archivos (**Expo Router**) y un **Backend** autoadministrable desarrollado en **Strapi CMS (v5)**.
 
@@ -12,7 +12,7 @@ El proyecto está organizado en un monorepo con dos directorios principales:
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 ### Frontend
 - **React Native** con **Expo** (SDK 56+)
