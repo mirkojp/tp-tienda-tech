@@ -157,7 +157,7 @@ export default function ProductDetailScreen() {
                 onLayout={(e) => setCarouselWidth(e.nativeEvent.layout.width)}
             >
 
-                {/* --- SECCIÓN: CARRUSEL DE IMÁGENES RESPONSIVO --- */}
+                {/* --- SECCIÓN: CARRUSEL DE IMÁGENES-- */}
                 <View style={[styles.carouselContainer, { width: carouselWidth }]}>
                     <FlatList
                         ref={flatListRef}

@@ -2,8 +2,9 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { STRAPI_URL } from '../api/config';
 
-const API_URL = 'http://localhost:1337/api'; // Ajustá según tu IP si usás celu físico
+const API_URL = `${STRAPI_URL}/api`;
 
 interface AuthContextType {
     user: any | null;

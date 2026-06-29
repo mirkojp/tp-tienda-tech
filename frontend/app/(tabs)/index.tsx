@@ -14,8 +14,9 @@ import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { ProductCard } from '../../src/components/ProductCard'; 
 import { theme } from '../../src/styles/theme';
+import { STRAPI_URL } from '../../src/api/config';
 
-const API_URL = 'http://localhost:1337/api';
+const API_URL = `${STRAPI_URL}/api`;
 
 export default function HomeScreen() {
   const router = useRouter();

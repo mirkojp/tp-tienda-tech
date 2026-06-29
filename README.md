@@ -4,7 +4,7 @@ Este es un proyecto Full-Stack de comercio electrónico para una tienda de tecno
 
 ---
 
-## 🚀 Arquitectura del Proyecto
+##  Arquitectura del Proyecto
 
 El proyecto está organizado en un monorepo con dos directorios principales:
 - **`backend/`**: Servidor de Strapi CMS encargado de la API REST, autenticación de usuarios, persistencia en base de datos y gestión del catálogo (productos, marcas, categorías y órdenes).
@@ -50,7 +50,7 @@ El proyecto está organizado en un monorepo con dos directorios principales:
 4. **Perfil y Gestión de Usuario**:
    - Formulario dinámico de **Iniciar Sesión** y **Crear Cuenta** con manejo de errores.
    - Panel de usuario autenticado con detalles de la cuenta.
-   - Historial de Órdenes: muestra los pedidos realizados con ID, fecha, artículos comprados, totales y un badge de estado de la orden (Completado 🟢, Pendiente 🟡, Cancelado 🔴).
+   - Historial de Órdenes: muestra los pedidos realizados con ID, fecha, artículos comprados, totales y un badge de estado de la orden (Completado , Pendiente , Cancelado ).
    - Sección de favoritos interactiva para acceso directo a los productos preferidos.
 
 ---
@@ -115,32 +115,3 @@ Para poblar la base de datos de Strapi con marcas, categorías y productos de de
      *Escanea el código QR con la app **Expo Go** en tu dispositivo móvil (Android/iOS) para probar la versión móvil.*
 
 ---
-
-## 📂 Estructura del Código Frontend
-
-Para facilitar su mantenimiento, el código del frontend está organizado de la siguiente manera:
-```text
-frontend/
-├── app/                  # Sistema de enrutamiento basado en archivos (Expo Router)
-│   ├── (tabs)/           # Pestañas principales de la app (index/tienda, cart, profile)
-│   │   ├── _layout.tsx   # Configuración y diseño de la barra de navegación/tab bar
-│   │   ├── index.tsx     # Catálogo principal y filtros
-│   │   ├── cart.tsx      # Carrito de compras
-│   │   └── profile.tsx   # Perfil, Órdenes, Favoritos y Formularios Auth
-│   └── product/
-│       └── [id].tsx      # Detalle de producto con carrusel e info extendida
-├── src/
-│   ├── api/              # Conexión REST y configuración con Strapi
-│   ├── components/       # Componentes visuales reutilizables (ej. ProductCard)
-│   ├── context/          # Proveedores de estado global (Auth, Cart, Favorites)
-│   ├── styles/           # Configuración centralizada de diseño
-│   │   ├── theme.ts      # Tokens de diseño (Colores, Spacing, Shadows, Borders)
-│   │   └── globalStyles.ts # Estilos globales compartidos para botones, inputs, etc.
-│   └── types/            # Tipados TypeScript comunes del negocio
-```
-
----
-
-## 📝 Licencia
-
-Este proyecto es de uso libre con fines educativos y de demostración académica.

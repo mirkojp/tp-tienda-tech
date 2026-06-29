@@ -124,7 +124,7 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 }
             }
         } catch (error: any) {
-            console.error('[FAVS] ❌ Error en toggleFavorite:', error);
+            console.error('[FAVS] Error en toggleFavorite:', error);
             if (error.response) {
                 console.error('Status del servidor:', error.response.status);
                 console.error('Cuerpo del error:', JSON.stringify(error.response.data));

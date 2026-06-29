@@ -220,23 +220,23 @@ async function main() {
     const categoryMap = {};
 
     try {
-        // console.log('\n📦 Creando marcas...');
-        // for (const brand of BRANDS) {
-        //     const response = await axios.post(`${STRAPI_URL}/brands`, { data: brand });
-        //     const docId = response.data.data.documentId;
-        //     brandMap[brand.name] = docId;
-        //     console.log(`   Marca: ${brand.name} (${docId})`);
-        // }
+        console.log('\n📦 Creando marcas...');
+        for (const brand of BRANDS) {
+            const response = await axios.post(`${STRAPI_URL}/brands`, { data: brand });
+            const docId = response.data.data.documentId;
+            brandMap[brand.name] = docId;
+            console.log(`   Marca: ${brand.name} (${docId})`);
+        }
 
-        // console.log('\n📦 Creando categorías...');
-        // for (const category of CATEGORIES) {
-        //     const response = await axios.post(`${STRAPI_URL}/categories`, { data: category });
-        //     const docId = response.data.data.documentId;
-        //     categoryMap[category.name] = docId;
-        //     console.log(`   Categoría: ${category.name} (${docId})`);
-        // }
+        console.log('\n📦 Creando categorías...');
+        for (const category of CATEGORIES) {
+            const response = await axios.post(`${STRAPI_URL}/categories`, { data: category });
+            const docId = response.data.data.documentId;
+            categoryMap[category.name] = docId;
+            console.log(`   Categoría: ${category.name} (${docId})`);
+        }
 
-        console.log('\n📦 Cargando base de productos masiva...');
+        console.log('\n📦 Cargando base de productos');
         let contador = 0;
         for (const prod of PRODUCTS) {
             const brandDocId = brandMap[prod.brandName];
@@ -252,7 +252,6 @@ async function main() {
                     isDeleted: false,
                     brand: brandDocId || null,
                     category: categoryDocId || null
-                    // Omitimos 'images' para dejar que la Media Library acepte el registro limpio
                 }
             };
 
