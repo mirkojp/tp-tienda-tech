@@ -107,7 +107,7 @@ export default function HomeScreen() {
     }
   };
 
-  // Cálculos de rango para el texto explicativo (Ej: de 1 a 10)
+  // Cálculos de rango para el texto explicativo 
   const fromItem = totalItems === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const toItem = Math.min(page * PAGE_SIZE, totalItems);
 
