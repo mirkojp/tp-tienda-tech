@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router';
 import { ProductCard } from '../../src/components/ProductCard'; 
 import { theme } from '../../src/styles/theme';
 import { STRAPI_URL } from '../../src/api/config';
-
+import { styles } from '../../src/styles/indexStyles';
 const API_URL = `${STRAPI_URL}/api`;
 
 export default function HomeScreen() {
@@ -236,6 +236,7 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
+<<<<<<< Updated upstream
 
 const styles = StyleSheet.create({
   container: {
@@ -402,3 +403,5 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 });
+=======
+>>>>>>> Stashed changes
