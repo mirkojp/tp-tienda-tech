@@ -8,6 +8,7 @@ import { useCart } from '../../src/context/CartContext';
 import { useFavorites } from '../../src/context/FavouritesContext';
 import { theme } from '../../src/styles/theme';
 import { styles } from '../../src/styles/[id]Styles';
+
 export default function ProductDetailScreen() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
