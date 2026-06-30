@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { Product } from '../types/strapy.types';
 import { STRAPI_URL } from '../api/config';
 import { theme } from '../styles/theme';
-import { styles } from '../styles/productCartStyles';
+import { styles } from '../styles/productCardStyles';
 
 interface Props {
     product: Product;
